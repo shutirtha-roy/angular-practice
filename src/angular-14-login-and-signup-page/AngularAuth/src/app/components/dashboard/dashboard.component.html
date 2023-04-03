@@ -1,7 +1,98 @@
-<button (click)="logout()" class="btn btn-danger">Log out</button>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Hello <h3>{{ fullName }}</h3></a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <input type="text" class="form-control form-control-dark w-25 rounded-0 border-0" placeholder="Search">
+    <div class="navbar-nav">
+        <div class="nav-item text nowrap">
+            <a class="nav-link px-3 cursor-pointer" style="cursor: pointer;" (click)="logout()">Sign out</a>
+        </div>
+    </div>
+</header>
 
-<p>dashboard works!</p>
+<div class="container-fluid">
+    <div class="row">
+        <ng-container *ngIf="role == 'Admin'">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3 sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="" class="nav-link active" aria-current="page" href="#">
+                                Nav-1
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link active" aria-current="page" href="#">
+                                Nav-2
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link active" aria-current="page" href="#">
+                                Nav-3
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link active" aria-current="page" href="#">
+                                Nav-4
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link active" aria-current="page" href="#">
+                                Nav-5
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </ng-container>
+        
 
-<ul *ngFor="let user of users">
-    <li>{{ user.username }}</li>
-</ul>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="chartjs-size-monitor">
+                <div class="chartjs-size-monitor-expand">
+                    <div class=""></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink">
+                    <div class=""></div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+                <h1 class="h2">Dashboard</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-togger">
+                        This week
+                    </button>
+                </div>
+            </div>
+
+            <h2>Employee List</h2><br>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th class="col">#</th>
+                            <th class="col">Firstname</th>
+                            <th class="col">Lastname</th>
+                            <th class="col">Username</th>
+                            <th class="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ user.firstName }}</td>
+                            <td>{{ user.lastName }}</td>
+                            <td>{{ user.userName }}</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
