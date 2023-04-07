@@ -43,6 +43,7 @@ namespace AngularAuthAPI.Controllers
             var newAccessToken = user.Token;
             var newRefreshToken = CreateRefreshToken();
             user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
             await _authDbContext.SaveChangesAsync();
 
             return Ok(new TokenApiDto()
@@ -136,6 +137,35 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<User>> GetAllUsers()
         {
             return Ok(await _authDbContext.Users.ToListAsync());
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh(TokenApiDto tokenApiDto)
+        {
+            if (tokenApiDto is null)
+                return BadRequest("Invalid Client Request");
+
+            string accessToken = tokenApiDto.AccessToken;
+            string refreshToken = tokenApiDto.RefreshToken;
+            var principle = GetPrincipleFromExpiredToken(accessToken);
+            var username = principle.Identities.FirstOrDefault(c => c.NameClaimType == ClaimTypes.Name).Name;
+            var user = await _authDbContext.Users.FirstOrDefaultAsync(u =>
+                u.Username == username);
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                return BadRequest("Invalid Request");
+
+            var newAccessToken = CreateJwt(user);
+            var newRefreshToken = CreateRefreshToken();
+            //user.Token = newAccessToken;
+            user.RefreshToken = newRefreshToken;
+            await _authDbContext.SaveChangesAsync();
+
+            return Ok(new TokenApiDto()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
+            });
+
         }
     }
 }
